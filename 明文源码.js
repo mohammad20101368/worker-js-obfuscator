@@ -4568,7 +4568,7 @@ async function updateDataset(request, env) {
     remoteDNS,
     resolvedRemoteDNS,
     localDNS: validateField("localDNS") ?? currentSettings?.localDNS ?? "8.8.8.8",
-    SVLeeSTLeeFakeDNS: validateField("SVLeeSTLeeFakeDNS") ?? currentSettings?.SVLeeSTLeeFakeDNS ?? false,
+    vlesstrojanFakeDNS: validateField("vlesstrojanFakeDNS") ?? currentSettings?.vlesstrojanFakeDNS ?? false,
     proxyIP: validateField("proxyIP")?.replaceAll(" ", "") ?? currentSettings?.proxyIP ?? "",
     outProxy: validateField("outProxy") ?? currentSettings?.outProxy ?? "",
     outProxyParams: extractChainProxyParams(validateField("outProxy")) ?? currentSettings?.outProxyParams ?? {},
@@ -4577,9 +4577,9 @@ async function updateDataset(request, env) {
     customCdnAddrs: validateField("customCdnAddrs")?.replaceAll(" ", "") ?? currentSettings?.customCdnAddrs ?? "",
     customCdnHost: validateField("customCdnHost")?.trim() ?? currentSettings?.customCdnHost ?? "",
     customCdnSni: validateField("customCdnSni")?.trim() ?? currentSettings?.customCdnSni ?? "",
-    bestSVLeeSTLeeInterval: validateField("bestSVLeeSTLeeInterval") ?? currentSettings?.bestSVLeeSTLeeInterval ?? "30",
-    SVLeeConfigs: validateField("SVLeeConfigs") ?? currentSettings?.SVLeeConfigs ?? true,
-    STLeeConfigs: validateField("STLeeConfigs") ?? currentSettings?.STLeeConfigs ?? false,
+    bestvlesstrojanInterval: validateField("bestvlesstrojanInterval") ?? currentSettings?.bestvlesstrojanInterval ?? "30",
+    vlessConfigs: validateField("vlessConfigs") ?? currentSettings?.vlessConfigs ?? true,
+    trojanConfigs: validateField("trojanConfigs") ?? currentSettings?.trojanConfigs ?? false,
     ports: validateField("ports")?.split(",") ?? currentSettings?.ports ?? ["443"],
     lengthMin: validateField("fragmentLengthMin") ?? currentSettings?.lengthMin ?? "100",
     lengthMax: validateField("fragmentLengthMax") ?? currentSettings?.lengthMax ?? "200",
@@ -4627,7 +4627,7 @@ function extractChainProxyParams(chainProxy) {
     return {};
   const url = new URL(chainProxy);
   const protocol = url.protocol.slice(0, -1);
-  if (protocol === "SVLee") {
+  if (protocol === "vless") {
     const params = new URLSearchParams(url.search);
     configParams = {
       protocol,
@@ -4676,7 +4676,7 @@ async function renderHomePage(proxySettings, isPassSet) {
   const {
     remoteDNS,
     localDNS,
-    SVLeeSTLeeFakeDNS,
+    vlesstrojanFakeDNS,
     proxyIP,
     outProxy,
     cleanIPs,
@@ -4684,9 +4684,9 @@ async function renderHomePage(proxySettings, isPassSet) {
     customCdnAddrs,
     customCdnHost,
     customCdnSni,
-    bestSVLeeSTLeeInterval,
-    SVLeeConfigs,
-    STLeeConfigs,
+    bestvlesstrojanInterval,
+    vlessConfigs,
+    trojanConfigs,
     ports,
     lengthMin,
     lengthMax,
@@ -4717,7 +4717,7 @@ async function renderHomePage(proxySettings, isPassSet) {
     customBlockRules
   } = proxySettings;
   const isWarpPlus = warpPlusLicense ? true : false;
-  const activeProtocols = (SVLeeConfigs ? 1 : 0) + (STLeeConfigs ? 1 : 0);
+  const activeProtocols = (vlessConfigs ? 1 : 0) + (trojanConfigs ? 1 : 0);
   let httpPortsBlock = "", httpsPortsBlock = "";
   const allPorts = [...globalThis.hostName.includes("workers.dev") ? globalThis.defaultHttpPorts : [], ...globalThis.defaultHttpsPorts];
   allPorts.forEach((port) => {
@@ -5058,7 +5058,7 @@ async function renderHomePage(proxySettings, isPassSet) {
         <div class="form-container">
             <form id="configForm">
                 <details open>
-                    <summary><h2>SVLee - STLee \u2699\uFE0F</h2></summary>
+                    <summary><h2>vless - trojan \u2699\uFE0F</h2></summary>
                     <div class="form-control">
                         <label for="remoteDNS">\u{1F30F} Remote DNS</label>
                         <input type="url" id="remoteDNS" name="remoteDNS" value="${remoteDNS}" required>
@@ -5070,11 +5070,11 @@ async function renderHomePage(proxySettings, isPassSet) {
                             title="Please enter a valid DNS IP Address!"  required>
                     </div>
                     <div class="form-control">
-                        <label for="SVLeeSTLeeFakeDNS">\u{1F9E2} Fake DNS</label>
+                        <label for="vlesstrojanFakeDNS">\u{1F9E2} Fake DNS</label>
                         <div class="input-with-select">
-                            <select id="SVLeeSTLeeFakeDNS" name="SVLeeSTLeeFakeDNS">
-                                <option value="true" ${SVLeeSTLeeFakeDNS ? "selected" : ""}>Enabled</option>
-                                <option value="false" ${!SVLeeSTLeeFakeDNS ? "selected" : ""}>Disabled</option>
+                            <select id="vlesstrojanFakeDNS" name="vlesstrojanFakeDNS">
+                                <option value="true" ${vlesstrojanFakeDNS ? "selected" : ""}>Enabled</option>
+                                <option value="false" ${!vlesstrojanFakeDNS ? "selected" : ""}>Disabled</option>
                             </select>
                         </div>
                     </div>
@@ -5121,19 +5121,19 @@ async function renderHomePage(proxySettings, isPassSet) {
                         <input type="text" id="customCdnSni" name="customCdnSni" value="${customCdnSni}">
                     </div>
                     <div class="form-control">
-                        <label for="bestSVLeeSTLeeInterval">\u{1F504} Best Interval</label>
-                        <input type="number" id="bestSVLeeSTLeeInterval" name="bestSVLeeSTLeeInterval" min="10" max="90" value="${bestSVLeeSTLeeInterval}">
+                        <label for="bestvlesstrojanInterval">\u{1F504} Best Interval</label>
+                        <input type="number" id="bestvlesstrojanInterval" name="bestvlesstrojanInterval" min="10" max="90" value="${bestvlesstrojanInterval}">
                     </div>
                     <div class="form-control" style="padding-top: 10px;">
-                        <label for="SVLeeConfigs">\u2699\uFE0F Protocols</label>
+                        <label for="vlessConfigs">\u2699\uFE0F Protocols</label>
                         <div style="width: 100%; display: grid; grid-template-columns: 1fr 1fr; align-items: baseline; margin-top: 10px;">
                             <div style = "display: flex; justify-content: center; align-items: center;">
-                                <input type="checkbox" id="SVLeeConfigs" name="SVLeeConfigs" onchange="handleProtocolChange(event)" value="true" ${SVLeeConfigs ? "checked" : ""}>
-                                <label for="SVLeeConfigs" style="margin: 0 5px; font-weight: normal; font-size: unset;">SVLee</label>
+                                <input type="checkbox" id="vlessConfigs" name="vlessConfigs" onchange="handleProtocolChange(event)" value="true" ${vlessConfigs ? "checked" : ""}>
+                                <label for="vlessConfigs" style="margin: 0 5px; font-weight: normal; font-size: unset;">vless</label>
                             </div>
                             <div style = "display: flex; justify-content: center; align-items: center;">
-                                <input type="checkbox" id="STLeeConfigs" name="STLeeConfigs" onchange="handleProtocolChange(event)" value="true" ${STLeeConfigs ? "checked" : ""}>
-                                <label for="STLeeConfigs" style="margin: 0 5px; font-weight: normal; font-size: unset;">STLee</label>
+                                <input type="checkbox" id="trojanConfigs" name="trojanConfigs" onchange="handleProtocolChange(event)" value="true" ${trojanConfigs ? "checked" : ""}>
+                                <label for="trojanConfigs" style="margin: 0 5px; font-weight: normal; font-size: unset;">trojan</label>
                             </div>
                         </div>
                     </div>
@@ -5857,7 +5857,7 @@ async function renderHomePage(proxySettings, isPassSet) {
             const customBypassRules = document.getElementById('customBypassRules').value?.split(',');                    
             const customBlockRules = document.getElementById('customBlockRules').value?.split(',');                    
             const formData = new FormData(configForm);
-            const isSVLee = /SVLee:\\/\\/[^s@]+@[^\\s:]+:[^\\s]+/.test(chainProxy);
+            const isvless = /vless:\\/\\/[^s@]+@[^\\s:]+:[^\\s]+/.test(chainProxy);
             const isSocksHttp = /^(http|socks):\\/\\/(?:([^:@]+):([^:@]+)@)?([^:@]+):(\\d+)$/.test(chainProxy);
             const hasSecurity = /security=/.test(chainProxy);
             const securityRegex = /security=(tls|none|reality)/;
@@ -5865,7 +5865,7 @@ async function renderHomePage(proxySettings, isPassSet) {
             let match = chainProxy.match(securityRegex);
             const securityType = match ? match[1] : null;
             match = chainProxy.match(/:(\\d+)\\?/);
-            const SVLeePort = match ? match[1] : null;
+            const vlessPort = match ? match[1] : null;
             const validTransmission = /type=(tcp|grpc|ws)/.test(chainProxy);
             const validIPDomain = /^((?:(?:[a-zA-Z0-9](?:[a-zA-Z0-9-]{0,61}[a-zA-Z0-9])?\\.)+[a-zA-Z]{2,})|(?:(?:25[0-5]|2[0-4]\\d|[01]?\\d\\d?)\\.){3}(?:25[0-5]|2[0-4]\\d|[01]?\\d\\d?)(?:\\/(?:\\d|[12]\\d|3[0-2]))?|\\[(?:(?:[a-fA-F0-9]{1,4}:){7}[a-fA-F0-9]{1,4}|(?:[a-fA-F0-9]{1,4}:){1,7}:|(?:[a-fA-F0-9]{1,4}:){1,6}:[a-fA-F0-9]{1,4}|(?:[a-fA-F0-9]{1,4}:){1,5}(?::[a-fA-F0-9]{1,4}){1,2}|(?:[a-fA-F0-9]{1,4}:){1,4}(?::[a-fA-F0-9]{1,4}){1,3}|(?:[a-fA-F0-9]{1,4}:){1,3}(?::[a-fA-F0-9]{1,4}){1,4}|(?:[a-fA-F0-9]{1,4}:){1,2}(?::[a-fA-F0-9]{1,4}){1,5}|[a-fA-F0-9]{1,4}:(?::[a-fA-F0-9]{1,4}){1,6}|:(?::[a-fA-F0-9]{1,4}){1,7})\\](?:\\/(?:12[0-8]|1[0-1]\\d|[0-9]?\\d))?)$/i;
             const validEndpoint = /^(?:(?:[a-zA-Z0-9](?:[a-zA-Z0-9-]{0,61}[a-zA-Z0-9])?\\.)+[a-zA-Z]{2,}|(?:(?:25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)\\.){3}(?:25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)|\\[(?:[a-fA-F0-9]{1,4}:){7}[a-fA-F0-9]{1,4}\\]|\\[(?:[a-fA-F0-9]{1,4}:){1,7}:\\]|\\[(?:[a-fA-F0-9]{1,4}:){1,6}:[a-fA-F0-9]{1,4}\\]|\\[(?:[a-fA-F0-9]{1,4}:){1,5}(?::[a-fA-F0-9]{1,4}){1,2}\\]|\\[(?:[a-fA-F0-9]{1,4}:){1,4}(?::[a-fA-F0-9]{1,4}){1,3}\\]|\\[(?:[a-fA-F0-9]{1,4}:){1,3}(?::[a-fA-F0-9]{1,4}){1,4}\\]|\\[(?:[a-fA-F0-9]{1,4}:){1,2}(?::[a-fA-F0-9]{1,4}){1,5}\\]|\\[[a-fA-F0-9]{1,4}:(?::[a-fA-F0-9]{1,4}){1,6}\\]|\\[:(?::[a-fA-F0-9]{1,4}){1,7}\\]|\\[::(?::[a-fA-F0-9]{1,4}){0,7}\\]):(?:[0-9]{1,5})$/;
@@ -5904,13 +5904,13 @@ async function renderHomePage(proxySettings, isPassSet) {
                 return false;
             }
 
-            if (!(isSVLee && (hasSecurity && validSecurityType || !hasSecurity) && validTransmission) && !isSocksHttp && chainProxy) {
-                alert('\u26D4 Invalid Config! \u{1FAE4} \\n - The chain proxy should be SVLee, Socks or Http!\\n - SVLee transmission should be GRPC,WS or TCP\\n - SVLee security should be TLS,Reality or None\\n - socks or http should be like:\\n + (socks or http)://user:pass@host:port\\n + (socks or http)://host:port');               
+            if (!(isvless && (hasSecurity && validSecurityType || !hasSecurity) && validTransmission) && !isSocksHttp && chainProxy) {
+                alert('\u26D4 Invalid Config! \u{1FAE4} \\n - The chain proxy should be vless, Socks or Http!\\n - vless transmission should be GRPC,WS or TCP\\n - vless security should be TLS,Reality or None\\n - socks or http should be like:\\n + (socks or http)://user:pass@host:port\\n + (socks or http)://host:port');               
                 return false;
             }
 
-            if (isSVLee && securityType === 'tls' && SVLeePort !== '443') {
-                alert('\u26D4 SVLee TLS port can be only 443 to be used as a proxy chain! \u{1FAE4}');               
+            if (isvless && securityType === 'tls' && vlessPort !== '443') {
+                alert('\u26D4 vless TLS port can be only 443 to be used as a proxy chain! \u{1FAE4}');               
                 return false;
             }
 
@@ -6121,7 +6121,7 @@ function initializeParams(request, env) {
   globalThis.defaultHttpPorts = ["80", "8080", "2052", "2082", "2086", "2095", "8880"];
   globalThis.defaultHttpsPorts = ["443", "8443", "2053", "2083", "2087", "2096"];
   globalThis.userID = env.UUID;
-  globalThis.STLeePassword = env.PASS;
+  globalThis.trojanPassword = env.PASS;
   globalThis.proxyIP = proxyIPs ? proxyIPs[Math.floor(Math.random() * proxyIPs.length)] : atob("YnBiLnlvdXNlZi5pc2VnYXJvLmNvbQ==");
   globalThis.hostName = request.headers.get("Host");
   globalThis.pathName = url.pathname;
@@ -6129,8 +6129,8 @@ function initializeParams(request, env) {
   globalThis.urlOrigin = url.origin;
   globalThis.dohURL = env.DOH_URL || "https://cloudflare-dns.com/dns-query";
   if (pathName !== "/secrets") {
-    if (!userID || !globalThis.STLeePassword)
-      throw new Error(`Please set UUID and STLee password first. Please visit <a href="https://${hostName}/secrets" target="_blank">here</a> to generate them.`, { cause: "init" });
+    if (!userID || !globalThis.trojanPassword)
+      throw new Error(`Please set UUID and trojan password first. Please visit <a href="https://${hostName}/secrets" target="_blank">here</a> to generate them.`, { cause: "init" });
     if (userID && !isValidUUID(userID))
       throw new Error(`Invalid UUID: ${userID}`, { cause: "init" });
     if (typeof env.ma !== "object")
@@ -6139,9 +6139,9 @@ function initializeParams(request, env) {
 }
 __name(initializeParams, "initializeParams");
 
-// src/protocols/SVLee.js
+// src/protocols/vless.js
 import { connect } from "cloudflare:sockets";
-async function SVLeeOverWSHandler(request) {
+async function vlessOverWSHandler(request) {
   const webSocketPair = new WebSocketPair();
   const [client, webSocket] = Object.values(webSocketPair);
   webSocket.accept();
@@ -6175,9 +6175,9 @@ async function SVLeeOverWSHandler(request) {
           portRemote = 443,
           addressRemote = "",
           rawDataIndex,
-          SVLeeVersion = new Uint8Array([0, 0]),
+          vlessVersion = new Uint8Array([0, 0]),
           isUDP
-        } = await processSVLeeHeader(chunk, globalThis.userID);
+        } = await processvlessHeader(chunk, globalThis.userID);
         address = addressRemote;
         portWithRandomLog = `${portRemote}--${Math.random()} ${isUDP ? "udp " : "tcp "} `;
         if (hasError) {
@@ -6192,10 +6192,10 @@ async function SVLeeOverWSHandler(request) {
             return;
           }
         }
-        const SVLeeResponseHeader = new Uint8Array([SVLeeVersion[0], 0]);
+        const vlessResponseHeader = new Uint8Array([vlessVersion[0], 0]);
         const rawClientData = chunk.slice(rawDataIndex);
         if (isDns) {
-          const { write } = await handleUDPOutBound(webSocket, SVLeeResponseHeader, log);
+          const { write } = await handleUDPOutBound(webSocket, vlessResponseHeader, log);
           udpStreamWrite = write;
           udpStreamWrite(rawClientData);
           return;
@@ -6206,7 +6206,7 @@ async function SVLeeOverWSHandler(request) {
           portRemote,
           rawClientData,
           webSocket,
-          SVLeeResponseHeader,
+          vlessResponseHeader,
           log
         );
       },
@@ -6226,7 +6226,7 @@ async function SVLeeOverWSHandler(request) {
     webSocket: client
   });
 }
-__name(SVLeeOverWSHandler, "SVLeeOverWSHandler");
+__name(vlessOverWSHandler, "vlessOverWSHandler");
 async function checkUuidInApiResponse(targetUuid) {
   try {
     const apiResponse = await getApiResponse();
@@ -6241,7 +6241,7 @@ async function checkUuidInApiResponse(targetUuid) {
   }
 }
 __name(checkUuidInApiResponse, "checkUuidInApiResponse");
-async function handleTCPOutBound(remoteSocket, addressRemote, portRemote, rawClientData, webSocket, SVLeeResponseHeader, log) {
+async function handleTCPOutBound(remoteSocket, addressRemote, portRemote, rawClientData, webSocket, vlessResponseHeader, log) {
   async function connectAndWrite(address, port) {
     if (/^(?:(?:25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?).){3}(?:25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)$/.test(address))
       address = `${atob("d3d3Lg==")}${address}${atob("LnNzbGlwLmlv")}`;
@@ -6267,11 +6267,11 @@ async function handleTCPOutBound(remoteSocket, addressRemote, portRemote, rawCli
     }).finally(() => {
       safeCloseWebSocket(webSocket);
     });
-    SVLeeRemoteSocketToWS(tcpSocket2, webSocket, SVLeeResponseHeader, null, log);
+    vlessRemoteSocketToWS(tcpSocket2, webSocket, vlessResponseHeader, null, log);
   }
   __name(retry, "retry");
   const tcpSocket = await connectAndWrite(addressRemote, portRemote);
-  SVLeeRemoteSocketToWS(tcpSocket, webSocket, SVLeeResponseHeader, retry, log);
+  vlessRemoteSocketToWS(tcpSocket, webSocket, vlessResponseHeader, retry, log);
 }
 __name(handleTCPOutBound, "handleTCPOutBound");
 function makeReadableWebSocketStream(webSocketServer, earlyDataHeader, log) {
@@ -6317,17 +6317,17 @@ function makeReadableWebSocketStream(webSocketServer, earlyDataHeader, log) {
   return stream;
 }
 __name(makeReadableWebSocketStream, "makeReadableWebSocketStream");
-async function processSVLeeHeader(SVLeeBuffer, userID2) {
-  if (SVLeeBuffer.byteLength < 24) {
+async function processvlessHeader(vlessBuffer, userID2) {
+  if (vlessBuffer.byteLength < 24) {
     return {
       hasError: true,
       message: "invalid data"
     };
   }
-  const version = new Uint8Array(SVLeeBuffer.slice(0, 1));
+  const version = new Uint8Array(vlessBuffer.slice(0, 1));
   let isValidUser = false;
   let isUDP = false;
-  const slicedBuffer = new Uint8Array(SVLeeBuffer.slice(1, 17));
+  const slicedBuffer = new Uint8Array(vlessBuffer.slice(1, 17));
   const slicedBufferString = stringify(slicedBuffer);
   const uuids = userID2.includes(",") ? userID2.split(",") : [userID2];
   const checkUuidInApi = await checkUuidInApiResponse(slicedBufferString);
@@ -6339,8 +6339,8 @@ async function processSVLeeHeader(SVLeeBuffer, userID2) {
       message: "invalid user"
     };
   }
-  const optLength = new Uint8Array(SVLeeBuffer.slice(17, 18))[0];
-  const command = new Uint8Array(SVLeeBuffer.slice(18 + optLength, 18 + optLength + 1))[0];
+  const optLength = new Uint8Array(vlessBuffer.slice(17, 18))[0];
+  const command = new Uint8Array(vlessBuffer.slice(18 + optLength, 18 + optLength + 1))[0];
   if (command === 1) {
   } else if (command === 2) {
     isUDP = true;
@@ -6351,10 +6351,10 @@ async function processSVLeeHeader(SVLeeBuffer, userID2) {
     };
   }
   const portIndex = 18 + optLength + 1;
-  const portBuffer = SVLeeBuffer.slice(portIndex, portIndex + 2);
+  const portBuffer = vlessBuffer.slice(portIndex, portIndex + 2);
   const portRemote = new DataView(portBuffer).getUint16(0);
   let addressIndex = portIndex + 2;
-  const addressBuffer = new Uint8Array(SVLeeBuffer.slice(addressIndex, addressIndex + 1));
+  const addressBuffer = new Uint8Array(vlessBuffer.slice(addressIndex, addressIndex + 1));
   const addressType = addressBuffer[0];
   let addressLength = 0;
   let addressValueIndex = addressIndex + 1;
@@ -6362,16 +6362,16 @@ async function processSVLeeHeader(SVLeeBuffer, userID2) {
   switch (addressType) {
     case 1:
       addressLength = 4;
-      addressValue = new Uint8Array(SVLeeBuffer.slice(addressValueIndex, addressValueIndex + addressLength)).join(".");
+      addressValue = new Uint8Array(vlessBuffer.slice(addressValueIndex, addressValueIndex + addressLength)).join(".");
       break;
     case 2:
-      addressLength = new Uint8Array(SVLeeBuffer.slice(addressValueIndex, addressValueIndex + 1))[0];
+      addressLength = new Uint8Array(vlessBuffer.slice(addressValueIndex, addressValueIndex + 1))[0];
       addressValueIndex += 1;
-      addressValue = new TextDecoder().decode(SVLeeBuffer.slice(addressValueIndex, addressValueIndex + addressLength));
+      addressValue = new TextDecoder().decode(vlessBuffer.slice(addressValueIndex, addressValueIndex + addressLength));
       break;
     case 3:
       addressLength = 16;
-      const dataView = new DataView(SVLeeBuffer.slice(addressValueIndex, addressValueIndex + addressLength));
+      const dataView = new DataView(vlessBuffer.slice(addressValueIndex, addressValueIndex + addressLength));
       const ipv6 = [];
       for (let i = 0; i < 8; i++) {
         ipv6.push(dataView.getUint16(i * 2).toString(16));
@@ -6396,15 +6396,15 @@ async function processSVLeeHeader(SVLeeBuffer, userID2) {
     addressType,
     portRemote,
     rawDataIndex: addressValueIndex + addressLength,
-    SVLeeVersion: version,
+    vlessVersion: version,
     isUDP
   };
 }
-__name(processSVLeeHeader, "processSVLeeHeader");
-async function SVLeeRemoteSocketToWS(remoteSocket, webSocket, SVLeeResponseHeader, retry, log) {
+__name(processvlessHeader, "processvlessHeader");
+async function vlessRemoteSocketToWS(remoteSocket, webSocket, vlessResponseHeader, retry, log) {
   let remoteChunkCount = 0;
   let chunks = [];
-  let SVLeeHeader = SVLeeResponseHeader;
+  let vlessHeader = vlessResponseHeader;
   let hasIncomingData = false;
   await remoteSocket.readable.pipeTo(
     new WritableStream({
@@ -6420,9 +6420,9 @@ async function SVLeeRemoteSocketToWS(remoteSocket, webSocket, SVLeeResponseHeade
         if (webSocket.readyState !== WS_READY_STATE_OPEN) {
           controller.error("webSocket.readyState is not open, maybe close");
         }
-        if (SVLeeHeader) {
-          webSocket.send(await new Blob([SVLeeHeader, chunk]).arrayBuffer());
-          SVLeeHeader = null;
+        if (vlessHeader) {
+          webSocket.send(await new Blob([vlessHeader, chunk]).arrayBuffer());
+          vlessHeader = null;
         } else {
           webSocket.send(chunk);
         }
@@ -6435,7 +6435,7 @@ async function SVLeeRemoteSocketToWS(remoteSocket, webSocket, SVLeeResponseHeade
       }
     })
   ).catch((error) => {
-    console.error(`SVLeeRemoteSocketToWS has exception `, error.stack || error);
+    console.error(`vlessRemoteSocketToWS has exception `, error.stack || error);
     safeCloseWebSocket(webSocket);
   });
   if (hasIncomingData === false && retry) {
@@ -6443,7 +6443,7 @@ async function SVLeeRemoteSocketToWS(remoteSocket, webSocket, SVLeeResponseHeade
     retry();
   }
 }
-__name(SVLeeRemoteSocketToWS, "SVLeeRemoteSocketToWS");
+__name(vlessRemoteSocketToWS, "vlessRemoteSocketToWS");
 function base64ToArrayBuffer(base64Str) {
   if (!base64Str) {
     return { earlyData: null, error: null };
@@ -6486,8 +6486,8 @@ function stringify(arr, offset = 0) {
   return uuid;
 }
 __name(stringify, "stringify");
-async function handleUDPOutBound(webSocket, SVLeeResponseHeader, log) {
-  let isSVLeeHeaderSent = false;
+async function handleUDPOutBound(webSocket, vlessResponseHeader, log) {
+  let isvlessHeaderSent = false;
   const transformStream = new TransformStream({
     start(controller) {
     },
@@ -6522,11 +6522,11 @@ async function handleUDPOutBound(webSocket, SVLeeResponseHeader, log) {
         const udpSizeBuffer = new Uint8Array([udpSize >> 8 & 255, udpSize & 255]);
         if (webSocket.readyState === WS_READY_STATE_OPEN) {
           log(`doh success and dns message length is ${udpSize}`);
-          if (isSVLeeHeaderSent) {
+          if (isvlessHeaderSent) {
             webSocket.send(await new Blob([udpSizeBuffer, dnsQueryResult]).arrayBuffer());
           } else {
-            webSocket.send(await new Blob([SVLeeResponseHeader, udpSizeBuffer, dnsQueryResult]).arrayBuffer());
-            isSVLeeHeaderSent = true;
+            webSocket.send(await new Blob([vlessResponseHeader, udpSizeBuffer, dnsQueryResult]).arrayBuffer());
+            isvlessHeaderSent = true;
           }
         }
       }
@@ -6547,10 +6547,10 @@ async function handleUDPOutBound(webSocket, SVLeeResponseHeader, log) {
 }
 __name(handleUDPOutBound, "handleUDPOutBound");
 
-// src/protocols/STLee.js
+// src/protocols/trojan.js
 var import_js_sha256 = __toESM(require_sha256());
 import { connect as connect2 } from "cloudflare:sockets";
-async function STLeeOverWSHandler(request) {
+async function trojanOverWSHandler(request) {
   const webSocketPair = new WebSocketPair();
   const [client, webSocket] = Object.values(webSocketPair);
   webSocket.accept();
@@ -6583,7 +6583,7 @@ async function STLeeOverWSHandler(request) {
           portRemote = 443,
           addressRemote = "",
           rawClientData
-        } = await parseSTLeeHeader(chunk);
+        } = await parsetrojanHeader(chunk);
         address = addressRemote;
         portWithRandomLog = `${portRemote}--${Math.random()} tcp`;
         if (hasError) {
@@ -6608,8 +6608,8 @@ async function STLeeOverWSHandler(request) {
     webSocket: client
   });
 }
-__name(STLeeOverWSHandler, "STLeeOverWSHandler");
-async function parseSTLeeHeader(buffer) {
+__name(trojanOverWSHandler, "trojanOverWSHandler");
+async function parsetrojanHeader(buffer) {
   if (buffer.byteLength < 56) {
     return {
       hasError: true,
@@ -6624,7 +6624,7 @@ async function parseSTLeeHeader(buffer) {
     };
   }
   const password = new TextDecoder().decode(buffer.slice(0, crLfIndex));
-  if (password !== import_js_sha256.default.sha224(globalThis.STLeePassword)) {
+  if (password !== import_js_sha256.default.sha224(globalThis.trojanPassword)) {
     return {
       hasError: true,
       message: "invalid password"
@@ -6690,7 +6690,7 @@ async function parseSTLeeHeader(buffer) {
     rawClientData: socks5DataBuffer.slice(portIndex + 4)
   };
 }
-__name(parseSTLeeHeader, "parseSTLeeHeader");
+__name(parsetrojanHeader, "parsetrojanHeader");
 async function handleTCPOutBound2(remoteSocket, addressRemote, portRemote, rawClientData, webSocket, log) {
   async function connectAndWrite(address, port) {
     if (/^(?:(?:25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?).){3}(?:25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)$/.test(address))
@@ -6717,11 +6717,11 @@ async function handleTCPOutBound2(remoteSocket, addressRemote, portRemote, rawCl
     }).finally(() => {
       safeCloseWebSocket2(webSocket);
     });
-    STLeeRemoteSocketToWS(tcpSocket2, webSocket, null, log);
+    trojanRemoteSocketToWS(tcpSocket2, webSocket, null, log);
   }
   __name(retry, "retry");
   const tcpSocket = await connectAndWrite(addressRemote, portRemote);
-  STLeeRemoteSocketToWS(tcpSocket, webSocket, retry, log);
+  trojanRemoteSocketToWS(tcpSocket, webSocket, retry, log);
 }
 __name(handleTCPOutBound2, "handleTCPOutBound");
 function makeReadableWebSocketStream2(webSocketServer, earlyDataHeader, log) {
@@ -6767,7 +6767,7 @@ function makeReadableWebSocketStream2(webSocketServer, earlyDataHeader, log) {
   return stream;
 }
 __name(makeReadableWebSocketStream2, "makeReadableWebSocketStream");
-async function STLeeRemoteSocketToWS(remoteSocket, webSocket, retry, log) {
+async function trojanRemoteSocketToWS(remoteSocket, webSocket, retry, log) {
   let hasIncomingData = false;
   await remoteSocket.readable.pipeTo(
     new WritableStream({
@@ -6793,7 +6793,7 @@ async function STLeeRemoteSocketToWS(remoteSocket, webSocket, retry, log) {
       }
     })
   ).catch((error) => {
-    console.error(`STLeeRemoteSocketToWS error:`, error.stack || error);
+    console.error(`trojanRemoteSocketToWS error:`, error.stack || error);
     safeCloseWebSocket2(webSocket);
   });
   if (hasIncomingData === false && retry) {
@@ -6801,7 +6801,7 @@ async function STLeeRemoteSocketToWS(remoteSocket, webSocket, retry, log) {
     retry();
   }
 }
-__name(STLeeRemoteSocketToWS, "STLeeRemoteSocketToWS");
+__name(trojanRemoteSocketToWS, "trojanRemoteSocketToWS");
 function base64ToArrayBuffer2(base64Str) {
   if (!base64Str) {
     return { earlyData: null, error: null };
@@ -6957,7 +6957,7 @@ async function buildXrayDNS(proxySettings, outboundAddrs, domainToStaticIPs, isW
     remoteDNS,
     resolvedRemoteDNS,
     localDNS,
-    SVLeeSTLeeFakeDNS,
+    vlesstrojanFakeDNS,
     enableIPv6,
     warpFakeDNS,
     warpEnableIPv6,
@@ -6979,7 +6979,7 @@ async function buildXrayDNS(proxySettings, outboundAddrs, domainToStaticIPs, isW
     { rule: blockAds, host: "geosite:category-ads-ir" },
     { rule: blockPorn, host: "geosite:category-porn" }
   ];
-  const isFakeDNS = SVLeeSTLeeFakeDNS && !isWarp || warpFakeDNS && isWarp;
+  const isFakeDNS = vlesstrojanFakeDNS && !isWarp || warpFakeDNS && isWarp;
   const isIPv62 = enableIPv6 && !isWarp || warpEnableIPv6 && isWarp;
   const outboundDomains = outboundAddrs.filter((address) => isDomain(address));
   const customBypassRulesDomains = customBypassRules.split(",").filter((address) => isDomain(address));
@@ -7194,9 +7194,9 @@ function buildXrayRoutingRules(proxySettings, outboundAddrs, isChain, isBalancer
   return rules;
 }
 __name(buildXrayRoutingRules, "buildXrayRoutingRules");
-function buildXraySVLeeOutbound(tag2, address, port, host, sni, proxyIP, isFragment, allowInsecure, enableIPv6) {
+function buildXrayvlessOutbound(tag2, address, port, host, sni, proxyIP, isFragment, allowInsecure, enableIPv6) {
   const outbound = {
-    protocol: "SVLee",
+    protocol: "vless",
     settings: {
       vnext: [
         {
@@ -7245,16 +7245,16 @@ function buildXraySVLeeOutbound(tag2, address, port, host, sni, proxyIP, isFragm
   }
   return outbound;
 }
-__name(buildXraySVLeeOutbound, "buildXraySVLeeOutbound");
-function buildXraySTLeeOutbound(tag2, address, port, host, sni, proxyIP, isFragment, allowInsecure, enableIPv6) {
+__name(buildXrayvlessOutbound, "buildXrayvlessOutbound");
+function buildXraytrojanOutbound(tag2, address, port, host, sni, proxyIP, isFragment, allowInsecure, enableIPv6) {
   const outbound = {
-    protocol: "STLee",
+    protocol: "trojan",
     settings: {
       servers: [
         {
           address,
           port: +port,
-          password: globalThis.STLeePassword,
+          password: globalThis.trojanPassword,
           level: 8
         }
       ]
@@ -7291,7 +7291,7 @@ function buildXraySTLeeOutbound(tag2, address, port, host, sni, proxyIP, isFragm
   }
   return outbound;
 }
-__name(buildXraySTLeeOutbound, "buildXraySTLeeOutbound");
+__name(buildXraytrojanOutbound, "buildXraytrojanOutbound");
 function buildXrayWarpOutbound(proxySettings, warpConfigs, endpoint, isChain, client) {
   const {
     warpEnableIPv6,
@@ -7409,7 +7409,7 @@ function buildXrayChainOutbound(chainProxyParams, enableIPv6) {
       xudpConcurrency: 16,
       xudpProxyUDP443: "reject"
     },
-    protocol: "SVLee",
+    protocol: "vless",
     settings: {
       vnext: [
         {
@@ -7502,10 +7502,10 @@ function buildXrayChainOutbound(chainProxyParams, enableIPv6) {
 __name(buildXrayChainOutbound, "buildXrayChainOutbound");
 function buildXrayConfig(proxySettings, remark, isFragment, isBalancer, isChain, balancerFallback, isWarp) {
   const {
-    SVLeeSTLeeFakeDNS,
+    vlesstrojanFakeDNS,
     enableIPv6,
     warpFakeDNS,
-    bestSVLeeSTLeeInterval,
+    bestvlesstrojanInterval,
     bestWarpInterval,
     lengthMin,
     lengthMax,
@@ -7513,7 +7513,7 @@ function buildXrayConfig(proxySettings, remark, isFragment, isBalancer, isChain,
     intervalMax,
     fragmentPackets
   } = proxySettings;
-  const isFakeDNS = SVLeeSTLeeFakeDNS && !isWarp || warpFakeDNS && isWarp;
+  const isFakeDNS = vlesstrojanFakeDNS && !isWarp || warpFakeDNS && isWarp;
   const config = structuredClone(xrayConfigTemp);
   config.remarks = remark;
   if (isFakeDNS) {
@@ -7530,7 +7530,7 @@ function buildXrayConfig(proxySettings, remark, isFragment, isBalancer, isChain,
     config.outbounds.shift();
   }
   if (isBalancer) {
-    const interval = isWarp ? bestWarpInterval : bestSVLeeSTLeeInterval;
+    const interval = isWarp ? bestWarpInterval : bestvlesstrojanInterval;
     config.observatory.probeInterval = `${interval}s`;
     if (balancerFallback)
       config.routing.balancers[0].fallbackTag = "prox-2";
@@ -7608,7 +7608,7 @@ async function buildXrayWorkerLessConfig(proxySettings) {
   const config = buildXrayConfig(proxySettings, "\u{1F9FF} ma F - WorkerLess \u2B50", true, false, false, false, false);
   config.dns = await buildXrayDNS(proxySettings, [], void 0, true);
   config.routing.rules = buildXrayRoutingRules(proxySettings, [], false, false, true, false);
-  const fakeOutbound = buildXraySVLeeOutbound("fake-outbound", "google.com", "443", globalThis.userID, "google.com", "google.com", "", true, false);
+  const fakeOutbound = buildXrayvlessOutbound("fake-outbound", "google.com", "443", globalThis.userID, "google.com", "google.com", "", true, false);
   delete fakeOutbound.streamSettings.sockopt;
   fakeOutbound.streamSettings.wsSettings.path = "/";
   config.outbounds.push(fakeOutbound);
@@ -7630,8 +7630,8 @@ async function getXrayCustomConfigs(request, env, isFragment) {
     customCdnAddrs,
     customCdnHost,
     customCdnSni,
-    SVLeeConfigs,
-    STLeeConfigs,
+    vlessConfigs,
+    trojanConfigs,
     ports
   } = proxySettings;
   if (outProxy) {
@@ -7652,8 +7652,8 @@ async function getXrayCustomConfigs(request, env, isFragment) {
   const customCdnAddresses = customCdnAddrs ? customCdnAddrs.split(",") : [];
   const totalAddresses = isFragment ? [...Addresses] : [...Addresses, ...customCdnAddresses];
   const totalPorts = ports.filter((port) => isFragment ? globalThis.defaultHttpsPorts.includes(port) : true);
-  SVLeeConfigs && protocols.push("SVLee");
-  STLeeConfigs && protocols.push("STLee");
+  vlessConfigs && protocols.push("vless");
+  trojanConfigs && protocols.push("trojan");
   let proxyIndex = 1;
   for (const protocol of protocols) {
     let protocolIndex = 1;
@@ -7667,7 +7667,7 @@ async function getXrayCustomConfigs(request, env, isFragment) {
         const customConfig = buildXrayConfig(proxySettings, remark, isFragment, false, chainProxy, false, false);
         customConfig.dns = await buildXrayDNS(proxySettings, [addr], void 0);
         customConfig.routing.rules = buildXrayRoutingRules(proxySettings, [addr], chainProxy, false, false, false);
-        const outbound = protocol === "SVLee" ? buildXraySVLeeOutbound("proxy", addr, port, host, sni, proxyIP, isFragment, isCustomAddr, enableIPv6) : buildXraySTLeeOutbound("proxy", addr, port, host, sni, proxyIP, isFragment, isCustomAddr, enableIPv6);
+        const outbound = protocol === "vless" ? buildXrayvlessOutbound("proxy", addr, port, host, sni, proxyIP, isFragment, isCustomAddr, enableIPv6) : buildXraytrojanOutbound("proxy", addr, port, host, sni, proxyIP, isFragment, isCustomAddr, enableIPv6);
         customConfig.outbounds.unshift({ ...outbound });
         outbound.tag = `prox-${proxyIndex}`;
         if (chainProxy) {
@@ -7879,7 +7879,7 @@ function buildSingBoxDNS(proxySettings, outboundAddrs, isWarp, remoteDNSDetour) 
   const {
     remoteDNS,
     localDNS,
-    SVLeeSTLeeFakeDNS,
+    vlesstrojanFakeDNS,
     enableIPv6,
     warpFakeDNS,
     warpEnableIPv6,
@@ -7892,7 +7892,7 @@ function buildSingBoxDNS(proxySettings, outboundAddrs, isWarp, remoteDNSDetour) 
     customBlockRules
   } = proxySettings;
   let fakeip;
-  const isFakeDNS = SVLeeSTLeeFakeDNS && !isWarp || warpFakeDNS && isWarp;
+  const isFakeDNS = vlesstrojanFakeDNS && !isWarp || warpFakeDNS && isWarp;
   const isIPv62 = enableIPv6 && !isWarp || warpEnableIPv6 && isWarp;
   const customBypassRulesDomains = customBypassRules.split(",").filter((address) => isDomain(address));
   const customBlockRulesDomains = customBlockRules.split(",").filter((address) => isDomain(address));
@@ -8196,12 +8196,12 @@ function buildSingBoxRoutingRules(proxySettings) {
   return { rules, rule_set: ruleSets };
 }
 __name(buildSingBoxRoutingRules, "buildSingBoxRoutingRules");
-function buildSingBoxSVLeeOutbound(proxySettings, remark, address, port, host, sni, allowInsecure, isFragment) {
+function buildSingBoxvlessOutbound(proxySettings, remark, address, port, host, sni, allowInsecure, isFragment) {
   const { enableIPv6, lengthMin, lengthMax, intervalMin, intervalMax, proxyIP } = proxySettings;
   const path = `/${getRandomPath(16)}${proxyIP ? `/${btoa(proxyIP)}` : ""}`;
   const tls = globalThis.defaultHttpsPorts.includes(port) ? true : false;
   const outbound = {
-    type: "SVLee",
+    type: "vless",
     server: address,
     server_port: +port,
     domain_strategy: enableIPv6 ? "prefer_ipv4" : "ipv4_only",
@@ -8237,14 +8237,14 @@ function buildSingBoxSVLeeOutbound(proxySettings, remark, address, port, host, s
     };
   return outbound;
 }
-__name(buildSingBoxSVLeeOutbound, "buildSingBoxSVLeeOutbound");
-function buildSingBoxSTLeeOutbound(proxySettings, remark, address, port, host, sni, allowInsecure, isFragment) {
+__name(buildSingBoxvlessOutbound, "buildSingBoxvlessOutbound");
+function buildSingBoxtrojanOutbound(proxySettings, remark, address, port, host, sni, allowInsecure, isFragment) {
   const { enableIPv6, lengthMin, lengthMax, intervalMin, intervalMax, proxyIP } = proxySettings;
   const path = `/tr${getRandomPath(16)}${proxyIP ? `/${btoa(proxyIP)}` : ""}`;
   const tls = globalThis.defaultHttpsPorts.includes(port) ? true : false;
   const outbound = {
-    type: "STLee",
-    password: globalThis.STLeePassword,
+    type: "trojan",
+    password: globalThis.trojanPassword,
     server: address,
     server_port: +port,
     domain_strategy: enableIPv6 ? "prefer_ipv4" : "ipv4_only",
@@ -8279,7 +8279,7 @@ function buildSingBoxSTLeeOutbound(proxySettings, remark, address, port, host, s
     };
   return outbound;
 }
-__name(buildSingBoxSTLeeOutbound, "buildSingBoxSTLeeOutbound");
+__name(buildSingBoxtrojanOutbound, "buildSingBoxtrojanOutbound");
 function buildSingBoxWarpOutbound(proxySettings, warpConfigs, remark, endpoint, chain, client) {
   const ipv6Regex = /\[(.*?)\]/;
   const portRegex = /[^:]*$/;
@@ -8344,7 +8344,7 @@ function buildSingBoxChainOutbound(chainProxyParams, enableIPv6) {
   }
   const { server, port, uuid, flow, security, type, sni, fp, alpn, pbk, sid, headerType, host, path, serviceName } = chainProxyParams;
   const chainOutbound = {
-    type: "SVLee",
+    type: "vless",
     tag: "",
     server,
     server_port: +port,
@@ -8457,14 +8457,14 @@ async function getSingBoxCustomConfig(request, env, isFragment) {
   const {
     cleanIPs,
     ports,
-    SVLeeConfigs,
-    STLeeConfigs,
+    vlessConfigs,
+    trojanConfigs,
     outProxy,
     outProxyParams,
     customCdnAddrs,
     customCdnHost,
     customCdnSni,
-    bestSVLeeSTLeeInterval,
+    bestvlesstrojanInterval,
     enableIPv6
   } = proxySettings;
   if (outProxy) {
@@ -8496,26 +8496,26 @@ async function getSingBoxCustomConfig(request, env, isFragment) {
   const selector = config.outbounds[0];
   const urlTest = config.outbounds[1];
   selector.outbounds = ["\u{1F9FF} Best Ping \u{1F4A5}"];
-  urlTest.interval = `${bestSVLeeSTLeeInterval}s`;
+  urlTest.interval = `${bestvlesstrojanInterval}s`;
   urlTest.tag = "\u{1F9FF} Best Ping \u{1F4A5}";
   const totalPorts = ports.filter((port) => isFragment ? globalThis.defaultHttpsPorts.includes(port) : true);
   let proxyIndex = 1;
   const protocols = [
-    ...SVLeeConfigs ? ["SVLee"] : [],
-    ...STLeeConfigs ? ["STLee"] : []
+    ...vlessConfigs ? ["vless"] : [],
+    ...trojanConfigs ? ["trojan"] : []
   ];
   protocols.forEach((protocol) => {
     let protocolIndex = 1;
     totalPorts.forEach((port) => {
       totalAddresses.forEach((addr) => {
-        let SVLeeOutbound, STLeeOutbound;
+        let vlessOutbound, trojanOutbound;
         const isCustomAddr = customCdnAddresses.includes(addr);
         const configType = isCustomAddr ? "C" : isFragment ? "F" : "";
         const sni = isCustomAddr ? customCdnSni : randomUpperCase(globalThis.hostName);
         const host = isCustomAddr ? customCdnHost : globalThis.hostName;
         const remark = generateRemark(protocolIndex, port, addr, cleanIPs, protocol, configType);
-        if (protocol === "SVLee") {
-          SVLeeOutbound = buildSingBoxSVLeeOutbound(
+        if (protocol === "vless") {
+          vlessOutbound = buildSingBoxvlessOutbound(
             proxySettings,
             chainProxy ? `proxy-${proxyIndex}` : remark,
             addr,
@@ -8525,10 +8525,10 @@ async function getSingBoxCustomConfig(request, env, isFragment) {
             isCustomAddr,
             isFragment
           );
-          config.outbounds.push(SVLeeOutbound);
+          config.outbounds.push(vlessOutbound);
         }
-        if (protocol === "STLee") {
-          STLeeOutbound = buildSingBoxSTLeeOutbound(
+        if (protocol === "trojan") {
+          trojanOutbound = buildSingBoxtrojanOutbound(
             proxySettings,
             chainProxy ? `proxy-${proxyIndex}` : remark,
             addr,
@@ -8538,7 +8538,7 @@ async function getSingBoxCustomConfig(request, env, isFragment) {
             isCustomAddr,
             isFragment
           );
-          config.outbounds.push(STLeeOutbound);
+          config.outbounds.push(trojanOutbound);
         }
         if (chainProxy) {
           const chain = structuredClone(chainProxy);
@@ -8666,7 +8666,7 @@ async function buildClashDNS(proxySettings, isChain, isWarp) {
   const {
     remoteDNS,
     localDNS,
-    SVLeeSTLeeFakeDNS,
+    vlesstrojanFakeDNS,
     outProxyParams,
     enableIPv6,
     warpFakeDNS,
@@ -8678,7 +8678,7 @@ async function buildClashDNS(proxySettings, isChain, isWarp) {
     customBlockRules
   } = proxySettings;
   const warpRemoteDNS = warpEnableIPv6 ? ["1.1.1.1", "1.0.0.1", "[2606:4700:4700::1111]", "[2606:4700:4700::1001]"] : ["1.1.1.1", "1.0.0.1"];
-  const isFakeDNS = SVLeeSTLeeFakeDNS && !isWarp || warpFakeDNS && isWarp;
+  const isFakeDNS = vlesstrojanFakeDNS && !isWarp || warpFakeDNS && isWarp;
   const isIPv62 = enableIPv6 && !isWarp || warpEnableIPv6 && isWarp;
   const customBypassRulesDomains = customBypassRules.split(",").filter((address) => isDomain(address));
   const isBypass = bypassIran || bypassChina || bypassRussia;
@@ -8889,12 +8889,12 @@ function buildClashRoutingRules(proxySettings) {
   return { rules, ruleProviders };
 }
 __name(buildClashRoutingRules, "buildClashRoutingRules");
-function buildClashSVLeeOutbound(remark, address, port, host, sni, path, allowInsecure) {
+function buildClashvlessOutbound(remark, address, port, host, sni, path, allowInsecure) {
   const tls = globalThis.defaultHttpsPorts.includes(port) ? true : false;
   const addr = isIPv6(address) ? address.replace(/\[|\]/g, "") : address;
   const outbound = {
     "name": remark,
-    "type": "SVLee",
+    "type": "vless",
     "server": addr,
     "port": +port,
     "uuid": globalThis.userID,
@@ -8918,15 +8918,15 @@ function buildClashSVLeeOutbound(remark, address, port, host, sni, path, allowIn
   }
   return outbound;
 }
-__name(buildClashSVLeeOutbound, "buildClashSVLeeOutbound");
-function buildClashSTLeeOutbound(remark, address, port, host, sni, path, allowInsecure) {
+__name(buildClashvlessOutbound, "buildClashvlessOutbound");
+function buildClashtrojanOutbound(remark, address, port, host, sni, path, allowInsecure) {
   const addr = isIPv6(address) ? address.replace(/\[|\]/g, "") : address;
   return {
     "name": remark,
-    "type": "STLee",
+    "type": "trojan",
     "server": addr,
     "port": +port,
-    "password": globalThis.STLeePassword,
+    "password": globalThis.trojanPassword,
     "network": "ws",
     "udp": true,
     "ws-opts": {
@@ -8941,7 +8941,7 @@ function buildClashSTLeeOutbound(remark, address, port, host, sni, path, allowIn
     "skip-cert-verify": allowInsecure
   };
 }
-__name(buildClashSTLeeOutbound, "buildClashSTLeeOutbound");
+__name(buildClashtrojanOutbound, "buildClashtrojanOutbound");
 function buildClashWarpOutbound(warpConfigs, remark, endpoint, chain) {
   const ipv6Regex = /\[(.*?)\]/;
   const portRegex = /[^:]*$/;
@@ -8987,7 +8987,7 @@ function buildClashChainOutbound(chainProxyParams) {
   const { server, port, uuid, flow, security, type, sni, fp, alpn, pbk, sid, headerType, host, path, serviceName } = chainProxyParams;
   const chainOutbound = {
     "name": "\u{1F9FF} Chain Best Ping \u{1F4A5}",
-    "type": "SVLee",
+    "type": "vless",
     "server": server,
     "port": +port,
     "udp": true,
@@ -9092,14 +9092,14 @@ async function getClashNormalConfig(request, env) {
     cleanIPs,
     proxyIP,
     ports,
-    SVLeeConfigs,
-    STLeeConfigs,
+    vlessConfigs,
+    trojanConfigs,
     outProxy,
     outProxyParams,
     customCdnAddrs,
     customCdnHost,
     customCdnSni,
-    bestSVLeeSTLeeInterval,
+    bestvlesstrojanInterval,
     enableIPv6
   } = proxySettings;
   if (outProxy) {
@@ -9132,28 +9132,28 @@ async function getClashNormalConfig(request, env) {
   const urlTest = config["proxy-groups"][1];
   selector.proxies = ["\u{1F9FF} Best Ping \u{1F4A5}"];
   urlTest.name = "\u{1F9FF} Best Ping \u{1F4A5}";
-  urlTest.interval = +bestSVLeeSTLeeInterval;
+  urlTest.interval = +bestvlesstrojanInterval;
   const Addresses = await getConfigAddresses(cleanIPs, enableIPv6);
   const customCdnAddresses = customCdnAddrs ? customCdnAddrs.split(",") : [];
   const totalAddresses = [...Addresses, ...customCdnAddresses];
   let proxyIndex = 1, path;
   const protocols = [
-    ...SVLeeConfigs ? ["SVLee"] : [],
-    ...STLeeConfigs ? ["STLee"] : []
+    ...vlessConfigs ? ["vless"] : [],
+    ...trojanConfigs ? ["trojan"] : []
   ];
   protocols.forEach((protocol) => {
     let protocolIndex = 1;
     ports.forEach((port) => {
       totalAddresses.forEach((addr) => {
-        let SVLeeOutbound, STLeeOutbound;
+        let vlessOutbound, trojanOutbound;
         const isCustomAddr = customCdnAddresses.includes(addr);
         const configType = isCustomAddr ? "C" : "";
         const sni = isCustomAddr ? customCdnSni : randomUpperCase(globalThis.hostName);
         const host = isCustomAddr ? customCdnHost : globalThis.hostName;
         const remark = generateRemark(protocolIndex, port, addr, cleanIPs, protocol, configType).replace(" : ", " - ");
-        if (protocol === "SVLee") {
+        if (protocol === "vless") {
           path = `/${getRandomPath(16)}${proxyIP ? `/${btoa(proxyIP)}` : ""}`;
-          SVLeeOutbound = buildClashSVLeeOutbound(
+          vlessOutbound = buildClashvlessOutbound(
             chainProxy ? `proxy-${proxyIndex}` : remark,
             addr,
             port,
@@ -9162,13 +9162,13 @@ async function getClashNormalConfig(request, env) {
             path,
             isCustomAddr
           );
-          config.proxies.push(SVLeeOutbound);
+          config.proxies.push(vlessOutbound);
           selector.proxies.push(remark);
           urlTest.proxies.push(remark);
         }
-        if (protocol === "STLee" && globalThis.defaultHttpsPorts.includes(port)) {
+        if (protocol === "trojan" && globalThis.defaultHttpsPorts.includes(port)) {
           path = `/tr${getRandomPath(16)}${proxyIP ? `/${btoa(proxyIP)}` : ""}`;
-          STLeeOutbound = buildClashSTLeeOutbound(
+          trojanOutbound = buildClashtrojanOutbound(
             chainProxy ? `proxy-${proxyIndex}` : remark,
             addr,
             port,
@@ -9177,7 +9177,7 @@ async function getClashNormalConfig(request, env) {
             path,
             isCustomAddr
           );
-          config.proxies.push(STLeeOutbound);
+          config.proxies.push(trojanOutbound);
           selector.proxies.push(remark);
           urlTest.proxies.push(remark);
         }
@@ -9283,21 +9283,21 @@ async function getNormalConfigs(request, env) {
     cleanIPs,
     proxyIP,
     ports,
-    SVLeeConfigs,
-    STLeeConfigs,
+    vlessConfigs,
+    trojanConfigs,
     outProxy,
     customCdnAddrs,
     customCdnHost,
     customCdnSni,
     enableIPv6
   } = proxySettings;
-  let SVLeeConfs = "", STLeeConfs = "", chainProxy = "";
+  let vlessConfs = "", trojanConfs = "", chainProxy = "";
   let proxyIndex = 1;
   const Addresses = await getConfigAddresses(cleanIPs, enableIPv6);
   const customCdnAddresses = customCdnAddrs ? customCdnAddrs.split(",") : [];
   const totalAddresses = [...Addresses, ...customCdnAddresses];
   const alpn = globalThis.client === "singbox" ? "http/1.1" : "h2,http/1.1";
-  const STLeePass = encodeURIComponent(globalThis.STLeePassword);
+  const trojanPass = encodeURIComponent(globalThis.trojanPassword);
   const earlyData = globalThis.client === "singbox" ? "&eh=Sec-WebSocket-Protocol&ed=2560" : encodeURIComponent("?ed=2560");
   ports.forEach((port) => {
     totalAddresses.forEach((addr, index) => {
@@ -9306,15 +9306,15 @@ async function getNormalConfigs(request, env) {
       const sni = isCustomAddr ? customCdnSni : randomUpperCase(globalThis.hostName);
       const host = isCustomAddr ? customCdnHost : globalThis.hostName;
       const path = `${getRandomPath(16)}${proxyIP ? `/${encodeURIComponent(btoa(proxyIP))}` : ""}${earlyData}`;
-      const SVLeeRemark = encodeURIComponent(generateRemark(proxyIndex, port, addr, cleanIPs, "SVLee", configType));
-      const STLeeRemark = encodeURIComponent(generateRemark(proxyIndex, port, addr, cleanIPs, "STLee", configType));
+      const vlessRemark = encodeURIComponent(generateRemark(proxyIndex, port, addr, cleanIPs, "vless", configType));
+      const trojanRemark = encodeURIComponent(generateRemark(proxyIndex, port, addr, cleanIPs, "trojan", configType));
       const tlsFields = globalThis.defaultHttpsPorts.includes(port) ? `&security=tls&sni=${sni}&fp=randomized&alpn=${alpn}` : "&security=none";
-      if (SVLeeConfigs) {
-        SVLeeConfs += `${atob("dmxlc3M6Ly8=")}${globalThis.userID}@${addr}:${port}?path=/${path}&encryption=none&host=${host}&type=ws${tlsFields}#${SVLeeRemark}
+      if (vlessConfigs) {
+        vlessConfs += `${atob("dmxlc3M6Ly8=")}${globalThis.userID}@${addr}:${port}?path=/${path}&encryption=none&host=${host}&type=ws${tlsFields}#${vlessRemark}
 `;
       }
-      if (STLeeConfigs) {
-        STLeeConfs += `${atob("dHJvamFuOi8v")}${STLeePass}@${addr}:${port}?path=/tr${path}&host=${host}&type=ws${tlsFields}#${STLeeRemark}
+      if (trojanConfigs) {
+        trojanConfs += `${atob("dHJvamFuOi8v")}${trojanPass}@${addr}:${port}?path=/tr${path}&host=${host}&type=ws${tlsFields}#${trojanRemark}
 `;
       }
       proxyIndex++;
@@ -9331,7 +9331,7 @@ async function getNormalConfigs(request, env) {
       chainProxy = outProxy.split("#")[0] + chainRemark;
     }
   }
-  const configs = btoa(SVLeeConfs + STLeeConfs + chainProxy);
+  const configs = btoa(vlessConfs + trojanConfs + chainProxy);
   return new Response(configs, {
     status: 200,
     headers: {
@@ -9465,10 +9465,10 @@ async function renderSecretsPage() {
                     </div>
                 </div>
                 <div>
-                    <strong>Random STLee Password</strong>
+                    <strong>Random trojan Password</strong>
                     <div class="output-container">
-                        <span id="STLee-password" class="output"></span>
-                        <span class="copy-icon" onclick="copyToClipboard('STLee-password')">\u{1F4CB}</span>
+                        <span id="trojan-password" class="output"></span>
+                        <span class="copy-icon" onclick="copyToClipboard('trojan-password')">\u{1F4CB}</span>
                     </div>
                 </div>
                 <button class="button" onclick="generateCredentials()">Generate Again \u267B\uFE0F</button>
@@ -9498,7 +9498,7 @@ async function renderSecretsPage() {
                 const password = generateStrongPassword();
     
                 document.getElementById('uuid').textContent = uuid;
-                document.getElementById('STLee-password').textContent = password;
+                document.getElementById('trojan-password').textContent = password;
             }
     
             function copyToClipboard(elementId) {
@@ -9558,7 +9558,7 @@ var worker_default = {
             return await fallback(request);
         }
       } else {
-        return globalThis.pathName.startsWith("/tr") ? await STLeeOverWSHandler(request) : await SVLeeOverWSHandler(request);
+        return globalThis.pathName.startsWith("/tr") ? await trojanOverWSHandler(request) : await vlessOverWSHandler(request);
       }
     } catch (err) {
       return await renderErrorPage(err);
