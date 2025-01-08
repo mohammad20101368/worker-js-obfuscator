@@ -4285,7 +4285,7 @@ async function renderLoginPage() {
     </head>
     <body>
         <div class="container">
-            <h1>mamad SAFE <span style="font-size: smaller;">${globalThis.panelVersion}</span> \u{1F351}</h1>
+            <h1>mamad Panel <span style="font-size: smaller;">${globalThis.panelVersion}</span> \u{1F351}</h1>
             <div class="form-container">
                 <h2>User Login</h2>
                 <form id="loginForm">
@@ -4319,7 +4319,7 @@ async function renderLoginPage() {
                     console.error('Login failed:', errorMessage);
                     return;
                 }
-                window.location.href = '/SAFE';
+                window.location.href = '/panel';
             } catch (error) {
                 console.error('Error during login:', error);
             }
@@ -4421,7 +4421,7 @@ __name(resetPassword, "resetPassword");
 async function login(request, env) {
   const auth = await Authenticate(request, env);
   if (auth)
-    return Response.redirect(`${globalThis.urlOrigin}/SAFE`, 302);
+    return Response.redirect(`${globalThis.urlOrigin}/panel`, 302);
   if (request.method === "POST")
     return await generateJWTToken(request, env);
   return await renderLoginPage();
@@ -4756,7 +4756,7 @@ async function renderHomePage(proxySettings, isPassSet) {
         <meta charset="UTF-8">
         <meta name="viewport" content="width=device-width, initial-scale=1.0">
         <meta name="timestamp" content=${Date.now()}>
-        <title>mamad SAFE ${globalThis.panelVersion}</title>
+        <title>mamad Panel ${globalThis.panelVersion}</title>
         <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
         <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@20..48,100..700,0..1,-50..200" />
         <title>Collapsible Sections</title>
@@ -5054,7 +5054,7 @@ async function renderHomePage(proxySettings, isPassSet) {
         </style>
     </head>
     <body>
-        <h1>mamad SAFE <span style="font-size: smaller;">${globalThis.panelVersion}</span> \u{1F351}</h1>
+        <h1>mamad Panel <span style="font-size: smaller;">${globalThis.panelVersion}</span> \u{1F351}</h1>
         <div class="form-container">
             <form id="configForm">
                 <details open>
@@ -5635,7 +5635,7 @@ async function renderHomePage(proxySettings, isPassSet) {
                 qrcodeContainer.lastElementChild.remove();
             });
             resetSettings.addEventListener('click', async () => {
-                const confirmReset = confirm('\u26A0\uFE0F This will reset all SAFE settings.\\nAre you sure?');
+                const confirmReset = confirm('\u26A0\uFE0F This will reset all panel settings.\\nAre you sure?');
                 if(!confirmReset) return;
                 const formData = new FormData();
                 formData.append('resetSettings', 'true');
@@ -5644,7 +5644,7 @@ async function renderHomePage(proxySettings, isPassSet) {
                     const refreshButtonVal = refreshBtn.innerHTML;
                     refreshBtn.innerHTML = '\u231B Loading...';
 
-                    const response = await fetch('/SAFE', {
+                    const response = await fetch('/panel', {
                         method: 'POST',
                         body: formData,
                         credentials: 'include'
@@ -5658,7 +5658,7 @@ async function renderHomePage(proxySettings, isPassSet) {
                         alert('\u26A0\uFE0F An error occured, Please try again!\\n\u26D4 ' + errorMessage);
                         return;
                     }       
-                    alert('\u2705 SAFE settings reset to default successfully! \u{1F60E}');
+                    alert('\u2705 Panel settings reset to default successfully! \u{1F60E}');
                     window.location.reload(true);
                 } catch (error) {
                     console.error('Error:', error);
@@ -5924,7 +5924,7 @@ async function renderHomePage(proxySettings, isPassSet) {
                 const applyButtonVal = applyButton.value;
                 applyButton.value = '\u231B Loading...';
 
-                const response = await fetch('/SAFE', {
+                const response = await fetch('/panel', {
                     method: 'POST',
                     body: formData,
                     credentials: 'include'
@@ -5990,7 +5990,7 @@ async function renderHomePage(proxySettings, isPassSet) {
             }
                     
             try {
-                const response = await fetch('/SAFE/password', {
+                const response = await fetch('/panel/password', {
                     method: 'POST',
                     headers: {
                         'Content-Type': 'text/plain'
@@ -6121,7 +6121,7 @@ function initializeParams(request, env) {
   globalThis.defaultHttpPorts = ["80", "8080", "2052", "2082", "2086", "2095", "8880"];
   globalThis.defaultHttpsPorts = ["443", "8443", "2053", "2083", "2087", "2096"];
   globalThis.userID = env.UUID;
-  globalThis.trojanPassword = env.RAMZ;
+  globalThis.trojanPassword = env.TROJAN_PASS;
   globalThis.proxyIP = proxyIPs ? proxyIPs[Math.floor(Math.random() * proxyIPs.length)] : atob("YnBiLnlvdXNlZi5pc2VnYXJvLmNvbQ==");
   globalThis.hostName = request.headers.get("Host");
   globalThis.pathName = url.pathname;
@@ -6869,7 +6869,7 @@ async function renderErrorPage(error) {
     </head>
     <body>
         <div id="error-container">
-            <h1>mamad SAFE <span style="font-size: smaller;">${globalThis.panelVersion}</span> \u{1F351}</h1>
+            <h1>mamad Panel <span style="font-size: smaller;">${globalThis.panelVersion}</span> \u{1F351}</h1>
             <div id="error-message">
                 <h2>\u274C Something went wrong!</h2>
                 <p><b>${error ? `\u26A0\uFE0F ${error.cause ? error.message.toString() : error.stack.toString()}` : ""}</b></p>
@@ -6890,7 +6890,7 @@ async function getConfigAddresses(cleanIPs, enableIPv6) {
   const defaultIPv6 = enableIPv6 ? resolved.ipv6.map((ip) => `[${ip}]`) : [];
   return [
     globalThis.hostName,
-    "www.wto.org",
+    "www.speedtest.net",
     ...resolved.ipv4,
     ...defaultIPv6,
     ...cleanIPs ? cleanIPs.split(",") : []
@@ -9454,7 +9454,7 @@ async function renderSecretsPage() {
     </head>
     <body>
         <div class="container">
-            <h1>mamad SAFE <span style="font-size: smaller;">${globalThis.panelVersion}</span> \u{1F351}</h1>
+            <h1>mamad Panel <span style="font-size: smaller;">${globalThis.panelVersion}</span> \u{1F351}</h1>
             <div class="form-container">
                 <h2>Secrets generator</h2>
                 <div>
@@ -9542,13 +9542,13 @@ var worker_default = {
             if (globalThis.client === "singbox" || globalThis.client === "hiddify")
               return await getSingBoxWarpConfig(request, env, globalThis.client);
             return await getXrayWarpConfigs(request, env, globalThis.client);
-          case "/SAFE":
+          case "/panel":
             return await handlePanel(request, env);
           case "/login":
             return await login(request, env);
           case "/logout":
             return logout();
-          case "/SAFE/password":
+          case "/panel/password":
             return await resetPassword(request, env);
           case "/my-ip":
             return await getMyIP(request);
