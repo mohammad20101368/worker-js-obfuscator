@@ -6890,7 +6890,7 @@ async function getConfigAddresses(cleanIPs, enableIPv6) {
   const defaultIPv6 = enableIPv6 ? resolved.ipv6.map((ip) => `[${ip}]`) : [];
   return [
     globalThis.hostName,
-    "www.speedtest.net",
+    "www.wto.org",
     ...resolved.ipv4,
     ...defaultIPv6,
     ...cleanIPs ? cleanIPs.split(",") : []
