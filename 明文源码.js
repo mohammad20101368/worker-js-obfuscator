@@ -6129,7 +6129,7 @@ function initializeParams(request, env) {
   globalThis.urlOrigin = url.origin;
   globalThis.dohURL = env.DOH_URL || "https://cloudflare-dns.com/dns-query";
   globalThis.fallbackDomain = env.FALLBACK || "speed.cloudflare.com";
-  globalThis.subPath = env.mamad || userID;
+  globalThis.subPath = env.msa || userID;
   if (pathName !== "/secrets") {
     if (!userID || !globalThis.TRPassword)
       throw new Error(`Please set UUID and Trojan password first. Please visit <a href="https://${hostName}/secrets" target="_blank">here</a> to generate them.`, { cause: "init" });
