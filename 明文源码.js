@@ -5641,10 +5641,10 @@ async function GetPanel(request, env) {
     if (hash2 && url.searchParams.get("token") != token) {
       return Response.redirect(`${url.origin}/login`, 302);
     }
-    const settingsVersion = await env.ariyan.get("Version") || "2.0";
-    if (settingsVersion != version) {
-      await env.settings.delete("Providers");
-      await env.settings.delete("Protocols");
+    const ariyanVersion = await env.ariyan.get("Version") || "2.0";
+    if (ariyanVersion != version) {
+      await env.ariyan.delete("Providers");
+      await env.ariyan.delete("Protocols");
     }
     const maxConfigs = parseInt(await env.ariyan.get("MaxConfigs") || "200");
     const protocols = (await env.ariyan.get("Protocols"))?.split("\n").filter((t) => t.trim().length > 0) || defaultProtocols;
@@ -5668,9 +5668,9 @@ async function GetPanel(request, env) {
     let htmlMessage = "";
     const message = url.searchParams.get("message");
     if (message == "success") {
-      htmlMessage = `<div class="p-1 bg-success text-white fw-bold text-center">Settings saved successfully.<br/>\u062A\u0646\u0638\u06CC\u0645\u0627\u062A \u0628\u0627 \u0645\u0648\u0641\u0642\u06CC\u062A \u0630\u062E\u06CC\u0631\u0647 \u0634\u062F.</div>`;
+      htmlMessage = `<div class="p-1 bg-success text-white fw-bold text-center">ariyan saved successfully.<br/>\u062A\u0646\u0638\u06CC\u0645\u0627\u062A \u0628\u0627 \u0645\u0648\u0641\u0642\u06CC\u062A \u0630\u062E\u06CC\u0631\u0647 \u0634\u062F.</div>`;
     } else if (message == "error") {
-      htmlMessage = `<div class="p-1 bg-danger text-white fw-bold text-center">Failed to save settings!<br/>\u062E\u0637\u0627 \u062F\u0631 \u0630\u062E\u06CC\u0631\u0647\u200C\u06CC \u062A\u0646\u0638\u06CC\u0645\u0627\u062A!</div>`;
+      htmlMessage = `<div class="p-1 bg-danger text-white fw-bold text-center">Failed to save ariyan!<br/>\u062E\u0637\u0627 \u062F\u0631 \u0630\u062E\u06CC\u0631\u0647\u200C\u06CC \u062A\u0646\u0638\u06CC\u0645\u0627\u062A!</div>`;
     }
     let passwordSection = "";
     if (hash2) {
@@ -6090,7 +6090,7 @@ async function GetPanel(request, env) {
                   <a id="open-kv-text" href="https://dash.cloudflare.com/?to=/:account/workers/kv/namespaces" target="_blank"></a>
                 </li>
                 <li>
-                  <a id="open-variables-text" href="https://dash.cloudflare.com/?to=/:account/workers/services/view/${url.hostname.split(".")[0]}/production/settings/bindings" target="_blank"></a>
+                  <a id="open-variables-text" href="https://dash.cloudflare.com/?to=/:account/workers/services/view/${url.hostname.split(".")[0]}/production/ariyan/bindings" target="_blank"></a>
                 </li>
               </ol>
             </div>
@@ -6176,7 +6176,7 @@ async function GetPanel(request, env) {
             // "custom-link-title": "Your subscription link for custom configs",
             "clash-link-title": "Your subscription link for clash clients (Clash, ClashX, ClashMeta...)",
             "you-can-use-your-worker-message": "You can continue using your worker without control panel.",
-            "you-need-namespace-message": "The 'settings' namespace is not defined! Please define a namespace named 'settings' in your worker 'KV Namespace Bindings' using bellow link, as described in the video and relad the page afterward.",  
+            "you-need-namespace-message": "The 'ariyan' namespace is not defined! Please define a namespace named 'ariyan' in your worker 'KV Namespace Bindings' using bellow link, as described in the video and relad the page afterward.",  
             "open-kv-text": "Open KV",
             "open-variables-text": "Open Worker's Variables",
           },
@@ -6187,7 +6187,7 @@ async function GetPanel(request, env) {
             // "custom-link-title": "\u0644\u06CC\u0646\u06A9 \u062B\u0628\u062A \u0646\u0627\u0645 \u0634\u0645\u0627 \u0628\u0631\u0627\u06CC \u06A9\u0627\u0646\u0641\u06CC\u06AF\u200C\u0647\u0627\u06CC Custom",
             "clash-link-title": "\u0644\u06CC\u0646\u06A9 \u062B\u0628\u062A \u0646\u0627\u0645 \u0634\u0645\u0627 \u0628\u0631\u0627\u06CC \u06A9\u0644\u0627\u06CC\u0646\u062A\u200C\u0647\u0627\u06CC \u06A9\u0644\u0634 Clash, ClashX, ClashMeta \u0648...",
             "you-can-use-your-worker-message": "\u0634\u0645\u0627 \u0645\u06CC\u200C\u062A\u0648\u0627\u0646\u06CC\u062F \u0627\u0632 \u0648\u0631\u06A9\u0631 \u062E\u0648\u062F \u0628\u062F\u0648\u0646 \u067E\u0646\u0644 \u06A9\u0646\u062A\u0631\u0644 \u0627\u0633\u062A\u0641\u0627\u062F\u0647 \u0646\u0645\u0627\u06CC\u06CC\u062F.",
-            "you-need-namespace-message": "\u0641\u0636\u0627\u06CC \u0646\u0627\u0645 settings \u062A\u0639\u0631\u06CC\u0641 \u0646\u0634\u062F\u0647 \u0627\u0633\u062A. \u0644\u0637\u0641\u0627 \u0645\u0637\u0627\u0628\u0642 \u0648\u06CC\u062F\u06CC\u0648\u06CC \u0622\u0645\u0648\u0632\u0634\u06CC\u060C \u0627\u0632 \u0637\u0631\u06CC\u0642 \u0644\u06CC\u0646\u06A9\u200C\u0647\u0627\u06CC \u0632\u06CC\u0631 \u0627\u0628\u062A\u062F\u0627 \u062F\u0631 \u0628\u062E\u0634 KV \u06CC\u06A9 \u0641\u0636\u0627\u06CC \u0646\u0627\u0645 \u0628\u0647 \u0627\u0633\u0645 settings \u0627\u06CC\u062C\u0627\u062F \u06A9\u0646\u06CC\u062F \u0648 \u0633\u067E\u0633 \u0627\u0632\u0637\u0631\u06CC\u0642 \u0628\u062E\u0634 'KV Namespace Bindings' \u0622\u0646 \u0631\u0627 \u0628\u0627 \u0647\u0645\u0627\u0646 \u0646\u0627\u0645 settings \u0628\u0647 \u0648\u0631\u06A9\u0631 \u062E\u0648\u062F \u0645\u062A\u0635\u0644 \u06A9\u0646\u06CC\u062F \u0648 \u067E\u0633 \u0627\u0632 \u0630\u062E\u06CC\u0631\u0647\u060C \u0645\u062C\u062F\u062F\u0627 \u067E\u0646\u0644 \u0631\u0627 \u0628\u0627\u0632 \u06A9\u0646\u06CC\u062F.",
+            "you-need-namespace-message": "\u0641\u0636\u0627\u06CC \u0646\u0627\u0645 ariyan \u062A\u0639\u0631\u06CC\u0641 \u0646\u0634\u062F\u0647 \u0627\u0633\u062A. \u0644\u0637\u0641\u0627 \u0645\u0637\u0627\u0628\u0642 \u0648\u06CC\u062F\u06CC\u0648\u06CC \u0622\u0645\u0648\u0632\u0634\u06CC\u060C \u0627\u0632 \u0637\u0631\u06CC\u0642 \u0644\u06CC\u0646\u06A9\u200C\u0647\u0627\u06CC \u0632\u06CC\u0631 \u0627\u0628\u062A\u062F\u0627 \u062F\u0631 \u0628\u062E\u0634 KV \u06CC\u06A9 \u0641\u0636\u0627\u06CC \u0646\u0627\u0645 \u0628\u0647 \u0627\u0633\u0645 ariyan \u0627\u06CC\u062C\u0627\u062F \u06A9\u0646\u06CC\u062F \u0648 \u0633\u067E\u0633 \u0627\u0632\u0637\u0631\u06CC\u0642 \u0628\u062E\u0634 'KV Namespace Bindings' \u0622\u0646 \u0631\u0627 \u0628\u0627 \u0647\u0645\u0627\u0646 \u0646\u0627\u0645 ariyan \u0628\u0647 \u0648\u0631\u06A9\u0631 \u062E\u0648\u062F \u0645\u062A\u0635\u0644 \u06A9\u0646\u06CC\u062F \u0648 \u067E\u0633 \u0627\u0632 \u0630\u062E\u06CC\u0631\u0647\u060C \u0645\u062C\u062F\u062F\u0627 \u067E\u0646\u0644 \u0631\u0627 \u0628\u0627\u0632 \u06A9\u0646\u06CC\u062F.",
             "open-kv-text": "\u0628\u0627\u0632\u06A9\u0631\u062F\u0646 \u0628\u062E\u0634 KV",
             "open-variables-text": "\u0628\u0627\u0632\u06A9\u0631\u062F\u0646 \u0628\u062E\u0634 \u0645\u062A\u063A\u06CC\u0631\u0647\u0627\u06CC \u0648\u0631\u06A9\u0631",
           },
@@ -6213,8 +6213,8 @@ async function PostPanel(request, env) {
       return Response.redirect(`${url.origin}/login`, 302);
     }
     if (formData.get("reset_password")) {
-      await env.settings.delete("Password");
-      await env.settings.delete("Token");
+      await env.ariyan.delete("Password");
+      await env.ariyan.delete("Token");
       return Response.redirect(`${url.origin}?message=success`, 302);
     } else if (formData.get("save")) {
       const password = formData.get("password")?.toString() || "";
@@ -6224,42 +6224,42 @@ async function PostPanel(request, env) {
         }
         hashedPassword = await bcrypt.hash(password, 10);
         token = GenerateToken(24);
-        await env.settings.put("Password", hashedPassword);
-        await env.settings.put("Token", token);
+        await env.ariyan.put("Password", hashedPassword);
+        await env.ariyan.put("Token", token);
       }
       let maxConfigs = parseInt(formData.get("max")?.toString() || "200");
       if (maxConfigs < 50) {
         maxConfigs = 50;
       }
-      await env.settings.put("MaxConfigs", maxConfigs.toString());
-      await env.settings.put("Protocols", formData.getAll("protocols")?.join("\n").trim());
-      await env.settings.put("ALPNs", formData.get("alpn_list_check")?.toString() ? formData.get("alpn_list")?.toString().trim().split("\n").map((str2) => str2.trim()).join("\n") || "" : "");
-      await env.settings.put("FingerPrints", formData.get("fp_list_check")?.toString() ? formData.get("fp_list")?.toString().trim().split("\n").map((str2) => str2.trim()).join("\n") || "" : "");
-      await env.settings.put("Providers", formData.get("providers_check")?.toString() ? formData.get("providers")?.toString().trim().split("\n").map((str2) => str2.trim()).join("\n") || "" : "");
-      await env.settings.put("Countries", formData.get("countries_check")?.toString() ? formData.getAll("countries[]")?.join(",") || "" : "");
-      await env.settings.put("CleanDomainIPs", formData.get("clean_ips_check")?.toString() ? formData.get("clean_ips")?.toString().trim().split("\n").map((str2) => str2.trim()).join("\n") || "" : "");
-      await env.settings.put("Configs", formData.get("configs_check")?.toString() ? formData.get("configs")?.toString().trim().split("\n").map((str2) => str2.trim()).join("\n") || "" : "");
-      await env.settings.put("IncludeOriginalConfigs", formData.get("original")?.toString() || "no");
-      await env.settings.put("IncludeMergedConfigs", formData.get("merged")?.toString() || "no");
-      await env.settings.put("BlockPorn", formData.get("block_porn")?.toString() || "no");
-      await env.settings.put("EnableFragments", formData.get("enable_fragments")?.toString() || "no");
-      await env.settings.put("Version", version);
+      await env.ariyan.put("MaxConfigs", maxConfigs.toString());
+      await env.ariyan.put("Protocols", formData.getAll("protocols")?.join("\n").trim());
+      await env.ariyan.put("ALPNs", formData.get("alpn_list_check")?.toString() ? formData.get("alpn_list")?.toString().trim().split("\n").map((str2) => str2.trim()).join("\n") || "" : "");
+      await env.ariyan.put("FingerPrints", formData.get("fp_list_check")?.toString() ? formData.get("fp_list")?.toString().trim().split("\n").map((str2) => str2.trim()).join("\n") || "" : "");
+      await env.ariyan.put("Providers", formData.get("providers_check")?.toString() ? formData.get("providers")?.toString().trim().split("\n").map((str2) => str2.trim()).join("\n") || "" : "");
+      await env.ariyan.put("Countries", formData.get("countries_check")?.toString() ? formData.getAll("countries[]")?.join(",") || "" : "");
+      await env.ariyan.put("CleanDomainIPs", formData.get("clean_ips_check")?.toString() ? formData.get("clean_ips")?.toString().trim().split("\n").map((str2) => str2.trim()).join("\n") || "" : "");
+      await env.ariyan.put("Configs", formData.get("configs_check")?.toString() ? formData.get("configs")?.toString().trim().split("\n").map((str2) => str2.trim()).join("\n") || "" : "");
+      await env.ariyan.put("IncludeOriginalConfigs", formData.get("original")?.toString() || "no");
+      await env.ariyan.put("IncludeMergedConfigs", formData.get("merged")?.toString() || "no");
+      await env.ariyan.put("BlockPorn", formData.get("block_porn")?.toString() || "no");
+      await env.ariyan.put("EnableFragments", formData.get("enable_fragments")?.toString() || "no");
+      await env.ariyan.put("Version", version);
     } else {
-      await env.settings.delete("MaxConfigs");
-      await env.settings.delete("Protocols");
-      await env.settings.delete("ALPNs");
-      await env.settings.delete("FingerPrints");
-      await env.settings.delete("Providers");
-      await env.settings.delete("Countries");
-      await env.settings.delete("CleanDomainIPs");
-      await env.settings.delete("Configs");
-      await env.settings.delete("IncludeOriginalConfigs");
-      await env.settings.delete("IncludeMergedConfigs");
-      await env.settings.delete("UUID");
-      await env.settings.delete("Password");
-      await env.settings.delete("Token");
-      await env.settings.delete("BlockPorn");
-      await env.settings.delete("EnableFragments");
+      await env.ariyan.delete("MaxConfigs");
+      await env.ariyan.delete("Protocols");
+      await env.ariyan.delete("ALPNs");
+      await env.ariyan.delete("FingerPrints");
+      await env.ariyan.delete("Providers");
+      await env.ariyan.delete("Countries");
+      await env.ariyan.delete("CleanDomainIPs");
+      await env.ariyan.delete("Configs");
+      await env.ariyan.delete("IncludeOriginalConfigs");
+      await env.ariyan.delete("IncludeMergedConfigs");
+      await env.ariyan.delete("UUID");
+      await env.ariyan.delete("Password");
+      await env.ariyan.delete("Token");
+      await env.ariyan.delete("BlockPorn");
+      await env.ariyan.delete("EnableFragments");
     }
     return Response.redirect(`${url.origin}?message=success${token ? "&token=" + token : ""}`, 302);
   } catch (e) {
@@ -6322,7 +6322,7 @@ async function PostLogin(request, env) {
   const match = await bcrypt2.compare(password, hashedPassword);
   if (match) {
     const token = GenerateToken(24);
-    await env.settings.put("Token", token);
+    await env.ariyan.put("Token", token);
     return Response.redirect(`${url.protocol}//${url.hostname}${url.port != "443" ? ":" + url.port : ""}/?token=${token}`, 302);
   }
   return Response.redirect(`${url.protocol}//${url.hostname}${url.port != "443" ? ":" + url.port : ""}/login?message=error`, 302);
@@ -9170,12 +9170,12 @@ async function GetConfigList(url, env) {
   let includeMergedConfigs = true;
   let cleanDomainIPs = [];
   let myConfigs = [];
-  let settingsNotAvailable = true;
+  let ariyanNotAvailable = true;
   let enableFragments = false;
   try {
     maxConfigs = parseInt(await env.ariyan.get("MaxConfigs") || "200");
-    const settingsVersion = await env.ariyan.get("Version") || "2.0";
-    if (settingsVersion == version) {
+    const ariyanVersion = await env.ariyan.get("Version") || "2.0";
+    if (ariyanVersion == version) {
       protocols = await env.ariyan.get("Protocols").then((val) => {
         return val ? val.split("\n") : [];
       });
@@ -9195,7 +9195,7 @@ async function GetConfigList(url, env) {
     includeOriginalConfigs = (await env.ariyan.get("IncludeOriginalConfigs") || "yes") == "yes";
     includeMergedConfigs = (await env.ariyan.get("IncludeMergedConfigs") || "yes") == "yes" && (protocols.includes("vmess") || protocols.includes("vless"));
     cleanDomainIPs = (await env.ariyan.get("CleanDomainIPs"))?.split("\n").filter((t) => t.trim().length > 0) || [];
-    settingsNotAvailable = await env.ariyan.get("MaxConfigs") === null;
+    ariyanNotAvailable = await env.ariyan.get("MaxConfigs") === null;
     myConfigs = (await env.ariyan.get("Configs"))?.split("\n").filter((t) => t.trim().length > 0) || [];
     enableFragments = await env.ariyan.get("EnableFragments") == "yes";
   } catch {
@@ -9210,7 +9210,7 @@ async function GetConfigList(url, env) {
   if (protocols.includes("built-in-trojan")) {
     maxConfigs = maxConfigs - maxBuiltInConfigsPerType;
   }
-  if (settingsNotAvailable) {
+  if (ariyanNotAvailable) {
     includeOriginalConfigs = true;
     includeMergedConfigs = true;
   }
