@@ -1,7 +1,7 @@
 /*!
-  * v2ray Subscription Worker v2.4
+  * mmad  v2.4
   * Copyright 2024 mohammad (https://twitter.com/mohammad)
-  * Licensed under GPLv3 (https://github.com/mohammad/v2ray-worker/blob/main/Licence.md)
+  
   */
 
 var __create = Object.create;
@@ -4757,8 +4757,8 @@ var v5_default = v5;
 // src/variables.ts
 init_modules_watch_stub();
 var version = "2.4";
-var providersUri = "https://raw.githubusercontent.com/mohammad20101368/v2ray-worker-vfmmad/refs/heads/main/resources/provider-list.txt";
-var proxiesUri = "https://raw.githubusercontent.com/mohammad20101368/v2ray-worker-vfmmad/refs/heads/main/resources/proxy-list.txt";
+var providersUri = "https://raw.githubusercontent.com/mohammad20101368/worker-vfmmad/refs/heads/main/resources/provider-list.txt";
+var proxiesUri = "https://raw.githubusercontent.com/mohammad20101368/worker-vfmmad/refs/heads/main/resources/proxy-list.txt";
 var defaultProtocols = [
   "vmess",
   "built-in-vless",
@@ -5833,11 +5833,11 @@ async function GetPanel(request, env) {
       
         const strings = {
           en: {
-            "page-title": "V2ray Worker Control Panel",
+            "page-title": "Control Panel",
             "text-version": "Version",
-            "sub-link-title": "Your subscription link for v2ray clients (v2rayN, v2rayNG, v2rayA, Nekobox, Nekoray, V2Box...)",
+            "sub-link-title": "link for (mmad)",
             // "custom-link-title": "Your subscription link for custom configs",
-            "clash-link-title": "Your subscription link for clash clients (Clash, ClashX, ClashMeta...)",
+            "title": "Your  link for  (mmad)",
             "includes-title": "Merged and original configs",
             "include-merged-configs-title": "Include configs merged with worker",
             "include-original-configs-title": "Include original configs",
@@ -5866,11 +5866,11 @@ async function GetPanel(request, env) {
             "reset-button": "Reset",
           },
           fa: {
-            "page-title": "\u067E\u0646\u0644 \u06A9\u0646\u062A\u0631\u0644 \u0648\u0631\u06A9\u0631 v2ray",
+            "page-title": "\u067E\u0646\u0644 \u06A9\u0646\u062A\u0631\u0644 \u0648\u0631\u06A9\u0631",
             "text-version": "\u0646\u0633\u062E\u0647",
-            "sub-link-title": "\u0644\u06CC\u0646\u06A9 \u062B\u0628\u062A \u0646\u0627\u0645 \u0634\u0645\u0627 \u0628\u0631\u0627\u06CC \u06A9\u0644\u0627\u06CC\u0646\u062A\u200C\u0647\u0627\u06CC v2rayN, v2rayNG, v2rayA, Nekobox, Nekoray, V2Box \u0648...",
+            "sub-link-title": "\u0644\u06CC\u0646\u06A9 \u062B\u0628\u062A \u0646\u0627\u0645 \u0634\u0645\u0627 \u0628\u0631\u0627\u06CC \u06A9\u0644\u0627\u06CC\u0646\u062A\u200C\u0647\u0627\u06CC\u0648...",
             // "custom-link-title": "\u0644\u06CC\u0646\u06A9 \u062B\u0628\u062A \u0646\u0627\u0645 \u0634\u0645\u0627 \u0628\u0631\u0627\u06CC \u06A9\u0627\u0646\u0641\u06CC\u06AF\u200C\u0647\u0627\u06CC Custom",
-            "clash-link-title": "\u0644\u06CC\u0646\u06A9 \u062B\u0628\u062A \u0646\u0627\u0645 \u0634\u0645\u0627 \u0628\u0631\u0627\u06CC \u06A9\u0644\u0627\u06CC\u0646\u062A\u200C\u0647\u0627\u06CC \u06A9\u0644\u0634 Clash, ClashX, ClashMeta \u0648...",
+            "clash-link-title": "\u0644\u06CC\u0646\u06A9 \u062B\u0628\u062A \u0646\u0627\u0645 \u0634\u0645\u0627 \u0628\u0631\u0627\u06CC \u06A9\u0644\u0627\u06CC\u0646\u062A\u200C\u0647\u0627\u06CC \u06A9\u0644\u0634\u0648...",
             "includes-title": "\u06A9\u0627\u0646\u0641\u06CC\u06AF\u200C\u0647\u0627\u06CC \u0627\u0635\u0644\u06CC \u0648 \u062A\u0631\u06A9\u06CC\u0628\u06CC",
             "include-merged-configs-title": "\u06A9\u0627\u0646\u0641\u06CC\u06AF\u200C\u0647\u0627\u06CC \u062A\u0631\u06A9\u06CC\u0628 \u0634\u062F\u0647 \u0628\u0627 \u0648\u0631\u06A9\u0631 \u0631\u0627 \u0627\u0636\u0627\u0641\u0647 \u06A9\u0646",
             "include-original-configs-title": "\u06A9\u0627\u0646\u0641\u06CC\u06AF\u200C\u0647\u0627\u06CC \u0627\u0635\u0644\u06CC \u0631\u0627 \u0627\u0636\u0627\u0641\u0647 \u06A9\u0646",
@@ -6170,22 +6170,22 @@ async function GetPanel(request, env) {
       
         const strings = {
           en: {
-            "page-title": "V2ray Worker Control Panel",
+            "title": "Control Panel",
             "text-version": "Version",
-            "sub-link-title": "Your subscription link for v2ray clients (v2rayN, v2rayNG, v2rayA, Nekobox, Nekoray, V2Box...)",
-            // "custom-link-title": "Your subscription link for custom configs",
-            "clash-link-title": "Your subscription link for clash clients (Clash, ClashX, ClashMeta...)",
+            "title": "Your subscription link for  (mmad)",
+            // "custom-link-title": "link",
+            "title": "link  (mmad)",
             "you-can-use-your-worker-message": "You can continue using your worker without control panel.",
             "you-need-namespace-message": "The 'ariyan' namespace is not defined! Please define a namespace named 'ariyan' in your worker 'KV Namespace Bindings' using bellow link, as described in the video and relad the page afterward.",  
             "open-kv-text": "Open KV",
             "open-variables-text": "Open Worker's Variables",
           },
           fa: {
-            "page-title": "\u067E\u0646\u0644 \u06A9\u0646\u062A\u0631\u0644 \u0648\u0631\u06A9\u0631 v2ray",
+            "page-title": "\u067E\u0646\u0644 \u06A9\u0646\u062A\u0631\u0644 \u0648\u0631\u06A9\u0631",
             "text-version": "\u0646\u0633\u062E\u0647",
-            "sub-link-title": "\u0644\u06CC\u0646\u06A9 \u062B\u0628\u062A \u0646\u0627\u0645 \u0634\u0645\u0627 \u0628\u0631\u0627\u06CC \u06A9\u0644\u0627\u06CC\u0646\u062A\u200C\u0647\u0627\u06CC v2rayN, v2rayNG, v2rayA, Nekobox, Nekoray, V2Box \u0648...",
+            "sub-link-title": "\u0644\u06CC\u0646\u06A9 \u062B\u0628\u062A \u0646\u0627\u0645 \u0634\u0645\u0627 \u0628\u0631\u0627\u06CC \u06A9\u0644\u0627\u06CC\u0646\u062A\u200C\u0647\u0627\u06CC\u0648...",
             // "custom-link-title": "\u0644\u06CC\u0646\u06A9 \u062B\u0628\u062A \u0646\u0627\u0645 \u0634\u0645\u0627 \u0628\u0631\u0627\u06CC \u06A9\u0627\u0646\u0641\u06CC\u06AF\u200C\u0647\u0627\u06CC Custom",
-            "clash-link-title": "\u0644\u06CC\u0646\u06A9 \u062B\u0628\u062A \u0646\u0627\u0645 \u0634\u0645\u0627 \u0628\u0631\u0627\u06CC \u06A9\u0644\u0627\u06CC\u0646\u062A\u200C\u0647\u0627\u06CC \u06A9\u0644\u0634 Clash, ClashX, ClashMeta \u0648...",
+            "clash-link-title": "\u0644\u06CC\u0646\u06A9 \u062B\u0628\u062A \u0646\u0627\u0645 \u0634\u0645\u0627 \u0628\u0631\u0627\u06CC \u06A9\u0644\u0627\u06CC\u0646\u062A\u200C\u0647\u0627\u06CC \u06A9\u0644\u0634\u0648...",
             "you-can-use-your-worker-message": "\u0634\u0645\u0627 \u0645\u06CC\u200C\u062A\u0648\u0627\u0646\u06CC\u062F \u0627\u0632 \u0648\u0631\u06A9\u0631 \u062E\u0648\u062F \u0628\u062F\u0648\u0646 \u067E\u0646\u0644 \u06A9\u0646\u062A\u0631\u0644 \u0627\u0633\u062A\u0641\u0627\u062F\u0647 \u0646\u0645\u0627\u06CC\u06CC\u062F.",
             "you-need-namespace-message": "\u0641\u0636\u0627\u06CC \u0646\u0627\u0645 ariyan \u062A\u0639\u0631\u06CC\u0641 \u0646\u0634\u062F\u0647 \u0627\u0633\u062A. \u0644\u0637\u0641\u0627 \u0645\u0637\u0627\u0628\u0642 \u0648\u06CC\u062F\u06CC\u0648\u06CC \u0622\u0645\u0648\u0632\u0634\u06CC\u060C \u0627\u0632 \u0637\u0631\u06CC\u0642 \u0644\u06CC\u0646\u06A9\u200C\u0647\u0627\u06CC \u0632\u06CC\u0631 \u0627\u0628\u062A\u062F\u0627 \u062F\u0631 \u0628\u062E\u0634 KV \u06CC\u06A9 \u0641\u0636\u0627\u06CC \u0646\u0627\u0645 \u0628\u0647 \u0627\u0633\u0645 ariyan \u0627\u06CC\u062C\u0627\u062F \u06A9\u0646\u06CC\u062F \u0648 \u0633\u067E\u0633 \u0627\u0632\u0637\u0631\u06CC\u0642 \u0628\u062E\u0634 'KV Namespace Bindings' \u0622\u0646 \u0631\u0627 \u0628\u0627 \u0647\u0645\u0627\u0646 \u0646\u0627\u0645 ariyan \u0628\u0647 \u0648\u0631\u06A9\u0631 \u062E\u0648\u062F \u0645\u062A\u0635\u0644 \u06A9\u0646\u06CC\u062F \u0648 \u067E\u0633 \u0627\u0632 \u0630\u062E\u06CC\u0631\u0647\u060C \u0645\u062C\u062F\u062F\u0627 \u067E\u0646\u0644 \u0631\u0627 \u0628\u0627\u0632 \u06A9\u0646\u06CC\u062F.",
             "open-kv-text": "\u0628\u0627\u0632\u06A9\u0631\u062F\u0646 \u0628\u062E\u0634 KV",
@@ -6287,7 +6287,7 @@ async function GetLogin(request, env) {
     <body dir="ltr">
       <div class="container border p-0">
         <div class="p-3 bg-primary text-white">
-          <div class="text-nowrap fs-4 fw-bold text-center">V2RAY Worker - Control Panel</div>
+          <div class="text-nowrap fs-4 fw-bold text-center">  - Control Panel</div>
           <div class="text-nowrap fs-6 text-center">
             Version ${version}
           </div>
