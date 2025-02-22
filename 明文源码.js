@@ -6379,7 +6379,7 @@ function initializeParams(request, env) {
   globalThis.urlOrigin = url.origin;
   globalThis.dohURL = env.DOH_URL || "https://cloudflare-dns.com/dns-query";
   globalThis.fallbackDomain = env.FALLBACK || "themeisle.com";
-  globalThis.subPath = env.SUB_PATH || msa;
+  globalThis.subPath = env.msa || msafamily;
   if (pathName !== "/secrets") {
     if (!userID || !globalThis.TRPassword)
       throw new Error(`Please set UUID and ${atob("VHJvamFu")} password first. Please visit <a href="https://${hostName}/secrets" target="_blank">here</a> to generate them.`, { cause: "init" });
